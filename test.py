@@ -1,45 +1,26 @@
-from PyQt6.QtCore import QSize, QUrl
-from PyQt6.QtMultimedia import QMediaPlayer
-from PyQt6.QtMultimediaWidgets import QVideoWidget
-from PyQt6.QtWidgets import (
-    QApplication,
-    QFileDialog,
-    QPushButton,
-    QVBoxLayout,
-    QWidget,
-)
+def partition(array,low,high):
+  #keep track of pivot
+  pivot = array[high]
+  i = low - 1   
+  for j in range(low,high):
+    if array[j] <= pivot:
+      i+=1
+      array[i],array[j] = array[j], array[i]
+  #swap for the pivot using I which was keeping track 
+  array[i + 1], array[high] = array[high], array[i+1]
+  return i + 1
 
-class Window(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Video Player")
+def quicksort(array,low,high):
+  if low < high:
+    pi = partition(array,low,high)
+    #sort left side
+    quicksort(array,low,pi-1)
+    #sorrt right side
+    quicksort(array,pi+1,high)
 
-        self.viewer = QVideoWidget()
-        self.viewer.setMinimumSize(QSize(800, 400))
-        self.player = QMediaPlayer()
-
-        self.loadVideoBtn = QPushButton("Open video file...")
-        self.loadVideoBtn.pressed.connect(self.openVideFile)
-
-        layout = QVBoxLayout()
-        layout.addWidget(self.viewer)
-        layout.addWidget(self.loadVideoBtn)
-        self.setLayout(layout)
-
-    def openVideFile(self):
-        filename, _ = QFileDialog.getOpenFileName(
-            self,
-            caption="Open video file",
-            filter="MP4 Video (*.mp4)",
-        )
-
-        if filename:
-            video = QUrl(filename)
-            self.player.setSource(video)
-            self.player.setVideoOutput(self.viewer)
-            self.player.play()
-
-app = QApplication([])
-window = Window()
-window.show()
-app.exec()
+if __name__ == '__main__':
+    array = [11,9,29,7,2,15,28]
+    # elements = ["mona", "dhaval", "aamir", "tina", "chang"]
+    quicksort(array, 0, len(array)-1)
+    print(array)
+    
